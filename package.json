@@ -1,0 +1,22 @@
+{
+  "name": "logrocket-fuzzy-search-sanitizer",
+  "version": "0.0.1",
+  "description": "Plugin for Logrocket to mask request/response bodies by designated field names",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "logrocket",
+    "logrocket plugin"
+  ],
+  "author": "Josh Bailey",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jbailey4/logrocket-fuzzy-search-sanitizer"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.2.2"
+  }
+}
