@@ -1,3 +1,5 @@
+import deparam from 'deparam';
+
 export default class LogrocketFuzzySearch {
   fields: string[] = []
 
@@ -6,11 +8,30 @@ export default class LogrocketFuzzySearch {
   }
 
   public requestSanitizer(request: Object): Object | any {
-    return request;
+    this._networkHandler(request);
   }
 
   public reponseSanitizer(reponse: Object): Object | any {
-    return reponse;
+    this._networkHandler(reponse);
+  }
+
+  private _networkHandler(networkRequestReponse: any = {}) {
+    const { body, headers } = networkRequestReponse;
+    const requestContentType = headers['Content-Type'] || '';
+    const isUrlEncodedRequest = requestContentType.includes('form-urlencoded');
+    let parsedBody;
+  
+    try {
+      parsedBody = isUrlEncodedRequest ? deparam(body) : JSON.parse(body);
+  
+      this._searchBody(parsedBody);
+    } catch (error) {
+      return networkRequestReponse;
+    }
+  
+    networkRequestReponse.body = parsedBody;
+  
+    return networkRequestReponse;
   }
 
   private _searchBody(body: any = {}) {
@@ -31,15 +52,15 @@ export default class LogrocketFuzzySearch {
                 value: 'foo@ex.com'
               }
           */
-          const _isTypeValuePair = key === 'type' && 'value' in body;
+          const isTypeValuePair = key === 'type' && 'value' in body;
 
           if (typeof keyName === 'object') {
-            if (!_isTypeValuePair) {
+            if (!isTypeValuePair) {
               this._searchBody(keyName);
             }
           }
 
-          if (_isTypeValuePair) {
+          if (isTypeValuePair) {
             this._mask(body, body.type, 'value');
           } else {
             this._mask(body, key);

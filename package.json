@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "Plugin for Logrocket to mask request/response bodies by designated field names",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "npx tsc --module amd --outFile dist/index.js ./src/index.ts",
+    "build": "npx tsc",
     "build:watch": "yarn build -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx tslint --project .",
@@ -24,5 +25,8 @@
     "logrocket": "^0.6.17",
     "tslint": "^5.12.0",
     "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "deparam": "^1.0.5"
   }
 }
