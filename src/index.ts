@@ -1,4 +1,4 @@
-import deparam from 'jquery-deparam';
+import deparam from 'deparam';
 
 export default class LogrocketFuzzySearch {
   private fields: string[] = [];
