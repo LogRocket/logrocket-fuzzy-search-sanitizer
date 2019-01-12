@@ -27,6 +27,7 @@
     "typescript": "^3.2.2"
   },
   "dependencies": {
-    "deparam": "^1.0.5"
+    "@types/jquery-deparam": "^1.0.1",
+    "jquery-deparam": "^0.5.3"
   }
 }

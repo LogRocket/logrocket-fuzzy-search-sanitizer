@@ -1,17 +1,17 @@
-import deparam from 'deparam';
+import deparam from 'jquery-deparam';
 
 export default class LogrocketFuzzySearch {
-  fields: string[] = []
+  private fields: string[] = [];
 
   constructor(privateFields: string[]) {
     this.fields = privateFields;
   }
 
-  public requestSanitizer(request: Object): Object | any {
+  public requestSanitizer(request: object): object | any {
     this._networkHandler(request);
   }
 
-  public reponseSanitizer(reponse: Object): Object | any {
+  public reponseSanitizer(reponse: object): object | any {
     this._networkHandler(reponse);
   }
 
@@ -20,17 +20,17 @@ export default class LogrocketFuzzySearch {
     const requestContentType = headers['Content-Type'] || '';
     const isUrlEncodedRequest = requestContentType.includes('form-urlencoded');
     let parsedBody;
-  
+
     try {
       parsedBody = isUrlEncodedRequest ? deparam(body) : JSON.parse(body);
-  
+
       this._searchBody(parsedBody);
     } catch (error) {
       return networkRequestReponse;
     }
-  
+
     networkRequestReponse.body = parsedBody;
-  
+
     return networkRequestReponse;
   }
 
@@ -80,7 +80,7 @@ export default class LogrocketFuzzySearch {
     }
   }
 
-  private _match(keyName: string = ''): Boolean {
+  private _match(keyName: string = ''): boolean {
     const { fields } = this;
     const normalizedKeyName = keyName.toLowerCase();
 
