@@ -1,25 +1,45 @@
 import deparam from 'deparam';
 
+interface INetworkRequestResponse {
+  body: any; // POJO or a JSON stringify equalivant
+  method: string;
+  headers: object;
+}
+
 export default class LogrocketFuzzySearch {
+  public static setup(fields) {
+    const instance = new LogrocketFuzzySearch(fields);
+
+    return {
+      requestSanitizer: instance.requestSanitizer.bind(instance),
+      responseSanitizer: instance.responseSanitizer.bind(instance),
+    };
+  }
+
   private fields: string[] = [];
 
   constructor(privateFields: string[]) {
     this.fields = privateFields;
   }
 
-  public requestSanitizer(request: object): object | any {
+  public requestSanitizer(request: INetworkRequestResponse): object | any {
+    // avoid parsing GET requests as there will be no body
+    if (request.method === 'GET') {
+      return request;
+    }
+
     this._networkHandler(request);
   }
 
-  public reponseSanitizer(reponse: object): object | any {
+  public responseSanitizer(reponse: INetworkRequestResponse): object | any {
     this._networkHandler(reponse);
   }
 
-  private _networkHandler(networkRequestReponse: any = {}) {
+  private _networkHandler(networkRequestReponse: INetworkRequestResponse) {
     const { body, headers } = networkRequestReponse;
-    const requestContentType = headers['Content-Type'] || '';
-    const isUrlEncodedRequest = requestContentType.includes('form-urlencoded');
-    let parsedBody;
+    const requestContentType: string = headers && (headers['Content-Type'] || '');
+    const isUrlEncodedRequest: boolean = requestContentType.includes('form-urlencoded');
+    let parsedBody: object;
 
     try {
       parsedBody = isUrlEncodedRequest ? deparam(body) : JSON.parse(body);
@@ -36,7 +56,7 @@ export default class LogrocketFuzzySearch {
 
   private _searchBody(body: any = {}) {
     // iterate over collection of objects ex. [{}, ...]
-    if (body.constructor === Array) {
+    if (body && body.constructor === Array) {
       body.forEach((item) => this._searchBody(item));
     } else {
       for (const key in body) {
