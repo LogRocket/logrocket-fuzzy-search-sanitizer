@@ -7,7 +7,7 @@ interface INetworkRequestResponse {
 }
 
 export default class LogrocketFuzzySearch {
-  public static setup(fields) {
+  public static setup(fields: string[]) {
     const instance = new LogrocketFuzzySearch(fields);
 
     return {
@@ -16,7 +16,7 @@ export default class LogrocketFuzzySearch {
     };
   }
 
-  private fields: string[] = [];
+  public fields: string[] = [];
 
   constructor(privateFields: string[]) {
     this.fields = privateFields;
@@ -28,11 +28,11 @@ export default class LogrocketFuzzySearch {
       return request;
     }
 
-    this._networkHandler(request);
+    return this._networkHandler(request);
   }
 
   public responseSanitizer(reponse: INetworkRequestResponse): object | any {
-    this._networkHandler(reponse);
+    return this._networkHandler(reponse);
   }
 
   private _networkHandler(networkRequestReponse: INetworkRequestResponse) {
@@ -64,13 +64,13 @@ export default class LogrocketFuzzySearch {
           const keyName = body[key];
 
           /*
-            Determines if the passed in object is a type-value pair,
-            resembling the following shape:
-
+            Objects with the following shape:
               {
                 type: 'email',
-                value: 'foo@ex.com'
+                value: 'secret@ex.com'
               }
+            where type/value keynames are generic and instead
+            the value matching the type keyname should be masked.
           */
           const isTypeValuePair = key === 'type' && 'value' in body;
 
@@ -96,7 +96,7 @@ export default class LogrocketFuzzySearch {
     const isSensitiveFieldName = this._match(searchKeyName);
 
     if (isSensitiveFieldName) {
-      body[searchKeyName] = '*';
+      body[maskKeyName] = '*';
     }
   }
 
