@@ -13,11 +13,11 @@ export default {
       format: 'umd',
       name
     },
-    {
-      file: './demo/logrocket-fuzzy-search-sanitizer.js',
-      format: 'iife',
-      name
-    }
+    // {
+    //   file: './demo/logrocket-fuzzy-search-sanitizer.js',
+    //   format: 'iife',
+    //   name
+    // }
   ],
   plugins: [
     commonjs(),
