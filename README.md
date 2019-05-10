@@ -4,6 +4,8 @@
 
 Optional LogRocket plugin to help sanitize data from network requests and responses.
 
+[Blog post](https://medium.com/@josh_bailey4/sanitizing-data-with-logrocket-2af1bbbe46a1)
+
 ---
 
 When initializing LogRocket's SDK you can optionally provide a `requestSanitizer` and `responseSanitizer` method within the [network option](https://docs.logrocket.com/reference#network), which are called on each network request within your app. This is useful when you need to prevent some requests/responses or sensitive data within headers, payloads, etc. being sent to LogRocket's servers and replays.
