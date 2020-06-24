@@ -1,7 +1,7 @@
 import deparam from 'deparam';
 
 interface INetworkRequestResponse {
-  body: any; // POJO or a JSON stringify equalivant
+  body?: any; // POJO or a JSON stringify equalivant
   method: string;
   headers: object;
 }
