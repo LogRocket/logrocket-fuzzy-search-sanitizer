@@ -31,12 +31,12 @@ export default class LogrocketFuzzySearch {
     return this._networkHandler(request);
   }
 
-  public responseSanitizer(reponse: INetworkRequestResponse): object | any {
-    return this._networkHandler(reponse);
+  public responseSanitizer(response: INetworkRequestResponse): object | any {
+    return this._networkHandler(response);
   }
 
-  private _networkHandler(networkRequestReponse: INetworkRequestResponse) {
-    const { body, headers } = networkRequestReponse;
+  private _networkHandler(networkRequestResponse: INetworkRequestResponse) {
+    const { body, headers } = networkRequestResponse;
     const requestContentType: string = headers && (headers['Content-Type'] || '');
     const isUrlEncodedRequest: boolean = requestContentType.includes('form-urlencoded');
     let parsedBody: object;
@@ -46,12 +46,12 @@ export default class LogrocketFuzzySearch {
 
       this._searchBody(parsedBody);
     } catch (error) {
-      return networkRequestReponse;
+      return networkRequestResponse;
     }
 
-    networkRequestReponse.body = parsedBody;
+    networkRequestResponse.body = parsedBody;
 
-    return networkRequestReponse;
+    return networkRequestResponse;
   }
 
   private _searchBody(body: any = {}) {
