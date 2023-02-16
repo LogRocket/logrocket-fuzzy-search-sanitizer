@@ -1,4 +1,4 @@
-import deparam from "deparam";
+import deparam from 'deparam';
 
 interface INetworkRequestResponse {
   body?: any; // POJO or a JSON stringify equalivant
@@ -6,9 +6,9 @@ interface INetworkRequestResponse {
   headers: object;
 }
 
-export default class fuzzySearch {
+export default class LogrocketFuzzySearch {
   public static setup(fields: string[], isSubStringMatch?: boolean) {
-    const instance = new fuzzySearch(fields, isSubStringMatch);
+    const instance = new LogrocketFuzzySearch(fields, isSubStringMatch);
 
     return {
       requestSanitizer: instance.requestSanitizer.bind(instance),
