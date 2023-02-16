@@ -7,8 +7,8 @@ interface INetworkRequestResponse {
 }
 
 export default class LogrocketFuzzySearch {
-  public static setup(fields: string[]) {
-    const instance = new LogrocketFuzzySearch(fields);
+  public static setup(fields: string[], isSubStringMatch?: boolean) {
+    const instance = new LogrocketFuzzySearch(fields, isSubStringMatch);
 
     return {
       requestSanitizer: instance.requestSanitizer.bind(instance),
@@ -17,14 +17,16 @@ export default class LogrocketFuzzySearch {
   }
 
   public fields: string[] = [];
+  public isSubStringMatch?: boolean = false;
 
-  constructor(privateFields: string[]) {
+  constructor(privateFields: string[], isSubStringMatch?: boolean) {
     this.fields = privateFields;
+    this.isSubStringMatch = isSubStringMatch;
   }
 
   public requestSanitizer(request: INetworkRequestResponse): object | any {
     // avoid parsing GET requests as there will be no body
-    if (request.method === 'GET') {
+    if (request.method === "GET") {
       return request;
     }
 
@@ -37,8 +39,10 @@ export default class LogrocketFuzzySearch {
 
   private _networkHandler(networkRequestReponse: INetworkRequestResponse) {
     const { body, headers } = networkRequestReponse;
-    const requestContentType: string = headers && (headers['Content-Type'] || '');
-    const isUrlEncodedRequest: boolean = requestContentType.includes('form-urlencoded');
+    const requestContentType: string =
+      headers && (headers["Content-Type"] || "");
+    const isUrlEncodedRequest: boolean =
+      requestContentType.includes("form-urlencoded");
     let parsedBody: object;
 
     try {
@@ -72,16 +76,16 @@ export default class LogrocketFuzzySearch {
             where type/value keynames are generic and instead
             the value matching the type keyname should be masked.
           */
-          const isTypeValuePair = key === 'type' && 'value' in body;
+          const isTypeValuePair = key === "type" && "value" in body;
 
-          if (typeof keyName === 'object') {
+          if (typeof keyName === "object") {
             if (!isTypeValuePair) {
               this._searchBody(keyName);
             }
           }
 
           if (isTypeValuePair) {
-            this._mask(body, body.type, 'value');
+            this._mask(body, body.type, "value");
           } else {
             this._mask(body, key);
           }
@@ -96,14 +100,21 @@ export default class LogrocketFuzzySearch {
     const isSensitiveFieldName = this._match(searchKeyName);
 
     if (isSensitiveFieldName) {
-      body[maskKeyName] = '*';
+      body[maskKeyName] = "*";
     }
   }
 
-  private _match(keyName: string = ''): boolean {
+  private _match(keyName: string = ""): boolean {
     const { fields } = this;
     const normalizedKeyName = keyName.toLowerCase();
 
-    return fields.some((field) => normalizedKeyName.indexOf(field.toLowerCase()) > -1);
+    if (this.isSubStringMatch) {
+      return fields.some(
+        (field) => normalizedKeyName.indexOf(field.toLowerCase()) > -1
+      );
+    } else {
+      const fieldsLowerCase = fields.map((x) => x.toLowerCase());
+      return fieldsLowerCase.includes(normalizedKeyName);
+    }
   }
 }
