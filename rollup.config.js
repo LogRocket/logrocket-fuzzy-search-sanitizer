@@ -1,11 +1,13 @@
-import typescript from 'rollup-plugin-typescript2';
-import commonjs from 'rollup-plugin-commonjs';
+import typescript from '@rollup/plugin-typescript';
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import nodeResolve from '@rollup/plugin-node-resolve';
 
-import pkg from './package.json';
+import pkg from './package.json' with { type: 'json' };
 
 const name = 'logrocketFuzzySearchSanitizer';
 
-export default {
+export default(async () => ({
   input: 'src/index.ts',
   output: [
     {
@@ -21,8 +23,8 @@ export default {
   ],
   plugins: [
     commonjs(),
-    typescript({
-      typescript: require('typescript')
-    })
+    typescript(),
+    json(),
+    nodeResolve(),
   ]
-}
+}))

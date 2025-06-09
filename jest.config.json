@@ -1,0 +1,14 @@
+{
+  "coverageDirectory": "coverage",
+  "moduleFileExtensions": [
+    "ts",
+    "js"
+  ],
+  "testMatch": [
+    "**/__tests__/*.+(ts|js)"
+  ],
+  "transform": {
+    "^.+\\.(ts|tsx)$": "ts-jest"
+  },
+  "watchman": false
+}
